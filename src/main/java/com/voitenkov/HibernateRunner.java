@@ -39,7 +39,22 @@ public class HibernateRunner {
                     .role(Role.USER)
                     .build();
 
-            session.save(user);
+//            session.save(user);
+
+//            session.update(User.builder()
+//                    .username("pavel2@mail.ru")
+//                    .firstname("Masha").lastname("Petrova")
+//                    .info("""
+//                            {
+//                            "id": 1,
+//                            "name": "Maria"
+//                            }
+//                            """)
+//                    .birthDate(new BirthDay(LocalDate.of(2002, 1, 19)))
+//                    .role(Role.USER)
+//                    .build());
+
+            session.delete(user);
 
             session.getTransaction().commit();
         }

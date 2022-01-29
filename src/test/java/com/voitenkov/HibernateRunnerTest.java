@@ -9,12 +9,12 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 class HibernateRunnerTest {
+
     @Test
     void checkReflectionApi() throws SQLException, IllegalAccessException {
         User user = User.builder()
