@@ -54,7 +54,8 @@ public class HibernateRunner {
 //                    .role(Role.USER)
 //                    .build());
 
-            session.delete(user);
+//            session.delete(user);
+            session.get(User.class, "pavel2@mail.ru");
 
             session.getTransaction().commit();
         }
