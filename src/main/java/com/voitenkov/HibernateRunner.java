@@ -1,63 +1,42 @@
 package com.voitenkov;
 
-import com.vladmihalcea.hibernate.type.json.JsonStringType;
-import com.voitenkov.entity.BirthDay;
-import com.voitenkov.entity.Role;
 import com.voitenkov.entity.User;
+import com.voitenkov.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-
-import java.sql.SQLException;
-import java.time.LocalDate;
 
 public class HibernateRunner {
 
-    public static void main(String[] args) throws SQLException {
-        Configuration configuration = new Configuration();
-//        configuration.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy()); // либо ставим на полем аннотацию @Column
-//        configuration.addAnnotatedClass(User.class); // так или в ресурсах прописываем в mapping
-//        configuration.addAttributeConverter(new BirthDayConverter(), true);
-        configuration.registerTypeOverride(new JsonStringType()); // подключили новый тип
-        configuration.configure();
+    public static void main(String[] args) {
+        User user = User.builder()
+                .username("ivsanov@gmail.com")
+                .firstname("Ivan")
+                .lastname("Ivanov")
+                .build();
 
-        try (SessionFactory sessionFactory = configuration.buildSessionFactory();
-             Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
+        try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
+            try (Session session1 = sessionFactory.openSession()) {
+                session1.beginTransaction();
+                session1.saveOrUpdate(user);
+                session1.getTransaction().commit();
+            }
 
-            User user = User.builder()
-                    .username("pavel2@mail.ru")
-                    .firstname("Ivan")
-                    .lastname("Ivanov")
-                    .info("""
-                            {
-                            "id": 25,
-                            "name": "Ivan"
-                            }
-                            """)
-                    .birthDate(new BirthDay(LocalDate.of(2000, 1, 19)))
-                    .role(Role.USER)
-                    .build();
+            try (Session session2 = sessionFactory.openSession()) {
+                session2.beginTransaction();
 
-//            session.save(user);
+                user.setFirstname("Sveta");
+//                session2.delete(user);
+//                refresh/merge
+//                User freshUser = session2.get(User.class, user.getUsername());
+//                freshUser.setLastname(user.getLastname());
+//                freshUser.setFirstname(user.getFirstname());
 
-//            session.update(User.builder()
-//                    .username("pavel2@mail.ru")
-//                    .firstname("Masha").lastname("Petrova")
-//                    .info("""
-//                            {
-//                            "id": 1,
-//                            "name": "Maria"
-//                            }
-//                            """)
-//                    .birthDate(new BirthDay(LocalDate.of(2002, 1, 19)))
-//                    .role(Role.USER)
-//                    .build());
+                Object mergeUser = session2.merge(user);
+//                session2.refresh(user);
 
-//            session.delete(user);
-            session.get(User.class, "pavel2@mail.ru");
+                session2.getTransaction().commit();
+            }
 
-            session.getTransaction().commit();
         }
     }
 }
