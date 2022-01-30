@@ -1,14 +1,14 @@
 package com.voitenkov.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
-import com.vladmihalcea.hibernate.type.json.JsonType;
 import com.voitenkov.converter.BirthDayConverter;
-import lombok.*;
-import org.hibernate.annotations.Type;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Data
 @RequiredArgsConstructor
