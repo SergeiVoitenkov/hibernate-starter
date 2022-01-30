@@ -1,7 +1,6 @@
 package com.voitenkov.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
-import com.voitenkov.converter.BirthDayConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,14 +17,13 @@ import javax.persistence.*;
 @Table(name ="users", schema = "public")
 @TypeDef(name = "json", typeClass = JsonStringType.class)
 public class User {
+
     @Id
     private String username;
-    private String firstname;
-    private String lastname;
 
-    @Convert(converter = BirthDayConverter.class)
-    @Column(name = "birth_date")
-    private BirthDay birthDate;
+    @Embedded // аннотация не обязательная
+    @AttributeOverride(name="birthDate", column = @Column(name = "birth_date"))
+    private PersonalInfo personalInfo;
 
     @Enumerated(EnumType.STRING)
     private Role role;

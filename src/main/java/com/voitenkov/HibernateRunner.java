@@ -1,5 +1,6 @@
 package com.voitenkov;
 
+import com.voitenkov.entity.PersonalInfo;
 import com.voitenkov.entity.User;
 import com.voitenkov.util.HibernateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +17,10 @@ public class HibernateRunner {
 
     public static void main(String[] args) {
         User user = User.builder()
-                .username("ivsanov@gmail.com")
-                .firstname("Ivan")
-                .lastname("Ivanov")
+                .username("petrov@gmail.com")
+                .personalInfo(PersonalInfo.builder()
+                        .firstname("Petr")
+                        .lastname("Petrov").build())
                 .build();
 
         log.info("User entity is in transient state, object: {}", user);
@@ -28,9 +30,8 @@ public class HibernateRunner {
             try (session1) {
                 Transaction transaction = session1.beginTransaction();
                 log.trace("Transaction is created, {}", transaction);
-                session1.beginTransaction();
-                log.trace("User is in persistent state {}, session {}", user, session1);
                 session1.saveOrUpdate(user);
+                log.trace("User is in persistent state {}, session {}", user, session1);
                 session1.getTransaction().commit();
             }
             log.warn("User is in detached state {}, session is closed {}", user, session1);
